@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+set -euo pipefail
+
+# install mise if not already available
+mise_path="${MISE_INSTALL_PATH:-$HOME/.local/bin/mise}"
+if [ ! -f "${mise_path}" ]; then
+    curl --silent --fail --location https://mise.run |  MISE_QUIET=1 sh
+fi
+
+# either run mise or tool_name
+tool_name="$(basename "$0")"
+if [ "${tool_name}" = "mise" ]; then
+    ${mise_path} "$@"
+else
+    ${mise_path} exec -- "${tool_name}" "$@"
+fi
