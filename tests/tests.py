@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 import tempfile
 import shutil
+import textwrap
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
 
@@ -20,7 +21,9 @@ class Tests(unittest.TestCase):
     def test_run_tool(self):
         with _TemporaryDirectoryPath(prefix="mise-test-") as temporary_directory:
 
-            temporary_directory.joinpath(".tool-versions").write_text("python 3.13.3\n")
+            temporary_directory.joinpath(".tool-versions").write_text(textwrap.dedent("""
+                python 3.13.3
+            """))
             shutil.copy2(SCRIPT_DIR.parent.joinpath("run_with_mise"), temporary_directory)
             
             result = subprocess.check_output(str(SCRIPT_DIR.joinpath("_run_python.sh")), text=True, cwd=temporary_directory, shell=True)
