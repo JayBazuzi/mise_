@@ -14,14 +14,18 @@ class Tests(unittest.TestCase):
         with _TemporaryDirectoryPath(prefix="mise-test-") as temporary_directory:
             shutil.copy2(SCRIPT_DIR.parent.joinpath("run_with_mise"), temporary_directory)
             
+            temporary_directory.joinpath(".tool-versions").write_text(textwrap.dedent("""
+                mise 2025.7.3
+            """))
             result = subprocess.check_output(str(SCRIPT_DIR.joinpath("_run_mise.sh")), text=True, cwd=temporary_directory, shell=True)
 
-        self.assertTrue(result.startswith("202"), f"{result=}")
+        self.assertTrue(result.startswith("2025.7.3"), f"{result=}")
 
     def test_run_tool(self):
         with _TemporaryDirectoryPath(prefix="mise-test-") as temporary_directory:
 
             temporary_directory.joinpath(".tool-versions").write_text(textwrap.dedent("""
+                mise 2025.7.3
                 python 3.13.3
             """))
             shutil.copy2(SCRIPT_DIR.parent.joinpath("run_with_mise"), temporary_directory)

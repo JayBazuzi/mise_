@@ -1,16 +1,20 @@
 #! /usr/bin/env bash
 set -euo pipefail
 
-# install mise if not already available
-mise_path="${MISE_INSTALL_PATH:-$HOME/.local/bin/mise}"
-if [ ! -f "${mise_path}" ]; then
+# read mise version from .tool-versions
+export MISE_VERSION=$(cat .tool-versions | grep mise | cut -d ' ' -f 2)
+
+export MISE_INSTALL_PATH="$HOME/.cache/mise/${MISE_VERSION}/mise"
+
+# ensure it's in the cache
+if [ ! -f "${MISE_INSTALL_PATH}" ]; then
     curl --silent --fail --location https://mise.run |  MISE_QUIET=1 sh
 fi
 
 # either run mise or tool_name
 tool_name="$(basename "$0")"
 if [ "${tool_name}" = "mise" ]; then
-    ${mise_path} "$@"
+    ${MISE_INSTALL_PATH} "$@"
 else
-    ${mise_path} exec -- "${tool_name}" "$@"
+    ${MISE_INSTALL_PATH} exec -- "${tool_name}" "$@"
 fi
