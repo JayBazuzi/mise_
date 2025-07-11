@@ -1,1 +1,2 @@
 - Prefix all commit messages using [Arlo's Commit Notation](https://github.com/RefactoringCombos/ArlosCommitNotation)
+- To run the tests, use `./build_and_test`
